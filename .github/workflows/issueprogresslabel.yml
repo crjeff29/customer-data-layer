@@ -1,0 +1,30 @@
+name: Addlabels
+
+on:
+  push:
+    branches-ignore: [main]
+jobs:
+  test1:
+    runs-on: ubuntu-latest
+    outputs:
+      output1: ${{ steps.split.outputs._1 }}
+    steps:
+    
+    - uses: rishabhgupta/split-by@v1
+      id: split
+      with:
+        string: '${{ github.ref_name }}'
+        split-by: '-'
+    - run: | 
+        echo "test=${{ steps.split.outputs._1}}" >> "$GITHUB_OUTPUT"
+        echo "$GITHUB_OUTPUT"
+        
+  putlabel:
+    runs-on: ubuntu-latest
+    needs: test1
+    if: ${{ needs.test1.outputs.output1 != null }}
+    steps:
+    - uses: KeisukeYamashita/attach-labels@v1
+      with:
+        labels: in progress
+        number: ${{needs.test1.outputs.output1}}

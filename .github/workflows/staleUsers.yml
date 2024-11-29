@@ -1,0 +1,65 @@
+name: Evaluar usuarios
+
+on:
+  
+  workflow_dispatch:
+
+jobs:
+  evaluate-and-remove-inactive-collaborators:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Configurar Git
+        run: |
+          git config --global user.name ${{ secrets.USER_CREDENTIALS }}
+          git config --global user.email ${{ secrets.USER_EMAIL_CREDENTIALS }}
+
+      - name: Listar colaboradores
+        run: |
+          # Utiliza 'gh' de GitHub CLI para obtener una lista de colaboradores en JSON
+          gh api "/repos/${{ github.repository }}/collaborators" > colaboradores.json
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Imprimir respuesta completa de colaboradores
+        run: |
+          cat colaboradores.json
+
+      - name: Evaluar actividad
+        run: |
+          # Leer la lista de colaboradores desde el archivo JSON
+          colaboradores=$(jq -r '.[].login' colaboradores.json)
+          # Definir el período de inactividad en segundos (por ejemplo, 4 meses)
+          periodo_inactividad=10368000  # 4 meses en segundos
+          # Obtener la fecha actual en formato UNIX timestamp
+          fecha_actual=$(date +%s)
+          # Iterar sobre la lista de colaboradores
+          for colaborador in $colaboradores; do
+            # Utiliza 'gh' para obtener la lista de commits del colaborador en todas las ramas
+            commits=$(gh api "/repos/${{ github.repository }}/commits?author=${colaborador}" -q ".[].commit.message" --jq '.[].commit.message')
+            
+            # Verificar si el colaborador ha realizado algún commit
+            if [ -n "$commits" ]; then
+              # Si ha realizado commit, obtener la última fecha de actividad
+              fecha_actividad=$(gh api "/repos/${{ github.repository }}/commits?author=${colaborador}" -q ".[0].commit.author.date" --jq '.[0].commit.author.date' | xargs -I{} date -d "{}" -u +%s)
+              echo gh api "/repos/${{ github.repository }}/commits?author=${colaborador}"
+              echo "$colaborador : $fecha_actividad"
+              
+              # Calcular el tiempo de inactividad
+              tiempo_inactividad=$((fecha_actual - fecha_actividad))
+              echo "$colaborador t_inactividad: $tiempo_inactividad"
+              
+              # Si el tiempo de inactividad es mayor que el período definido, eliminar al colaborador
+              if [ $tiempo_inactividad -gt $periodo_inactividad ]; then
+                echo "El colaborador $colaborador está inactivo desde hace más de 4 meses."
+                
+                # Utilizar curl para eliminar al colaborador
+                curl -X DELETE -H "Authorization: token ${{ secrets.ACTION_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/collaborators/$colaborador"
+              fi
+            else
+              # Si el colaborador no ha realizado ningún commit, imprimir un mensaje
+              echo "El colaborador $colaborador no ha realizado ningún commit en ninguna rama."
+            fi
+          done
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

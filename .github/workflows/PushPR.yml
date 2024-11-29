@@ -1,0 +1,44 @@
+name: Onpush-issueToPR
+
+on:
+  push:
+    branches-ignore: [main]
+
+jobs:
+  test1:
+    runs-on: ubuntu-latest
+    outputs:
+      output1: ${{ steps.split.outputs._0 }}
+    steps:
+    
+    - uses: rishabhgupta/split-by@v1
+      id: split
+      with:
+        string: '${{ github.ref_name }}'
+        split-by: '-'
+    - run: | 
+        echo "test=${{ steps.split.outputs._0}}" >> "$GITHUB_OUTPUT"
+        echo "$GITHUB_OUTPUT"
+        echo "${{ github.event.head_commit.message }}"
+    
+          
+  build:
+    runs-on: ubuntu-latest
+    needs: test1
+    steps:
+     - uses: actions/checkout@v2
+
+     - name: Obtener primeras 2 letras
+       id: obtener-letras
+       run: |
+          cadena_completa="${{ github.event.head_commit.message }}"
+          pullrequestCommand="${cadena_completa:0:2}"
+          pullrequestCommand=$(echo "$pullrequestCommand" | tr '[:lower:]' '[:upper:]')
+          echo "::set-output name=pullrequestCommand::$pullrequestCommand"
+
+     - name: build PR
+       if: ${{ steps.obtener-letras.outputs.pullrequestCommand == 'PR' }}
+       uses: jonahgoldwastaken/issue-branch@v1.0.2
+       with:
+        token: ${{ secrets.ACTION_TOKEN }}
+        name_pattern: "${{ needs.test1.outputs.output1 }}-{number}"
