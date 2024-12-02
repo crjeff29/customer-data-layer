@@ -14,22 +14,22 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 import java.util.UUID;
 
-@Component
-@RequiredArgsConstructor
+//@Component
+//@RequiredArgsConstructor
 public class CustomerAdapter {
-    private static final String TOPIC = "customer-service-data-topic";
-    private final ObjectMapper objectMapper = new ObjectMapper();
-    private final KafkaTemplate<String, Object> kafkaTemplate;
-    private final CustomerService customerService;
-
-    @KafkaListener(topics = Constants.GET_CUSTOMER_KAFKA_TOPIC, groupId = "bda-group")
-    public void listen(String message) throws JsonProcessingException {
-        CustomerDTO dto = objectMapper.readValue(message, CustomerDTO.class);
-
-        Optional<Customer> customer = customerService.getCustomerByBusinessPartner(dto.getBusinessPartner());
-
-        kafkaTemplate.send(TOPIC, "customer-created");
-
-    }
+//    private static final String TOPIC = "customer-service-data-topic";
+//    private final ObjectMapper objectMapper = new ObjectMapper();
+//    private final KafkaTemplate<String, Object> kafkaTemplate;
+//    private final CustomerService customerService;
+//
+//    @KafkaListener(topics = Constants.GET_CUSTOMER_KAFKA_TOPIC, groupId = "bda-group")
+//    public void listen(String message) throws JsonProcessingException {
+//        CustomerDTO dto = objectMapper.readValue(message, CustomerDTO.class);
+//
+//        Optional<Customer> customer = customerService.getCustomerByBusinessPartner(dto.getBusinessPartner());
+//
+//        kafkaTemplate.send(TOPIC, "customer-created");
+//
+//    }
 
 }

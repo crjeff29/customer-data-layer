@@ -12,7 +12,7 @@ import java.net.InetSocketAddress;
 public class GrpcServiceConf {
     @Bean
     public Server grpcServer(CustomerGrpcService customerProtoService) throws Exception {
-        Server server = NettyServerBuilder.forAddress(new InetSocketAddress("localhost", 9091))
+        Server server = NettyServerBuilder.forAddress(new InetSocketAddress("0.0.0.0", 9091))
                 .addService(customerProtoService)
                 .build();
         server.start();

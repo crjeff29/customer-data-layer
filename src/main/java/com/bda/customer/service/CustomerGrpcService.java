@@ -13,11 +13,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.server.service.GrpcService;
 
 
 import java.util.Optional;
 
+@Slf4j
 @GrpcService
 @RequiredArgsConstructor
 public class CustomerGrpcService extends CustomerAccessServiceGrpc.CustomerAccessServiceImplBase {
@@ -66,10 +68,12 @@ public class CustomerGrpcService extends CustomerAccessServiceGrpc.CustomerAcces
             responseObserver.onCompleted();
 
         } catch (RuntimeException e) {
+            log.error("Error " + e.getMessage());
             responseObserver.onError(Status.NOT_FOUND
                     .withDescription(e.getMessage())
                     .asRuntimeException());
         } catch (Exception e) {
+            log.error("Error " + e.getMessage());
             responseObserver.onError(Status.INTERNAL
                     .withDescription("An unexpected error occurred")
                     .withCause(e)
