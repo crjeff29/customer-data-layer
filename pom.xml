@@ -167,6 +167,7 @@
                 </configuration>
             </plugin>
         </plugins>
+        <finalName>customer-data-layer</finalName>
     </build>
 
 </project>

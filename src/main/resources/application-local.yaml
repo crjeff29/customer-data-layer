@@ -1,0 +1,39 @@
+
+  # Kafka configuration
+  # kafka:
+  #   bootstrap-servers: localhost:9092
+  #   consumer:
+  #     group-id: bda-group
+  #     auto-offset-reset: earliest
+  #     key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+  #     value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+  #   producer:
+  #     key-serializer: org.apache.kafka.common.serialization.StringSerializer
+  #     value-serializer: org.apache.kafka.common.serialization.StringSerializer
+  #     # additional kafka configurations
+  #     acks: all
+  #   consumer:
+  #     enable-auto-commit: false
+#gRPC configuration
+grpc:
+  server:
+    port: 5090
+    enabled: false
+
+base:
+  encryption:
+    key: Xn2r5u8x/A?D(G+K
+    iv: 4654655168546825
+    length: 256
+    cipherAlgorithm: AES
+    secretKeyFactory: PBKDF2WithHmacSHA512
+    salt: 946565
+    cipherInstance: AES/CBC/ISO10126Padding
+    interactions: 65536
+
+db:
+  data:
+    user: eMXUSIBo8nZyt9nNfK3VroJq/yF/hze9MLdjQ0bvADE=
+    pass: RURXWWxlckplakc4Y3NvUDB6UnF1K2pqMjl1cXRrVURYazVsUlpiTUJhUT0=
+    driver: oracle.jdbc.driver.OracleDriver
+    url: HQVdhT1YKrYuKe7I6K1MtRfahjIEbE6bq5rL0bY2rD9NjIrahOvBeXq2NeQcuzJm
