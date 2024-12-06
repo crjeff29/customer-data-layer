@@ -1,0 +1,9 @@
+apiVersion: 1
+kind: ConfigMap
+metadata:
+  name: customer-data-config
+  namespace: customer-domain
+data:
+  DATABASE_URL: HQVdhT1YKrYuKe7I6K1MtRfahjIEbE6bq5rL0bY2rD9NjIrahOvBeXq2NeQcuzJm
+  DATABASE_USER: eMXUSIBo8nZyt9nNfK3VroJq/yF/hze9MLdjQ0bvADE=
+  DATABASE_DRIVER: oracle.jdbc.driver.OracleDriver
