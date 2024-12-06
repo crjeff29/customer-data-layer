@@ -1,7 +1,5 @@
 package com.bda.customer.config;
 
-import com.bda.customer.util.Utilities;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
@@ -24,18 +22,14 @@ import java.util.Objects;
         entityManagerFactoryRef = "bdaEntityManager",
         transactionManagerRef = "oracleTransactionManager"
 )
-@RequiredArgsConstructor
 public class DataAccessConfig {
-    private final Utilities utilities;
-    private final DataBaseProppertiesConf dataBaseProppertiesConf;
-
     @Bean
     public DataSource getOracleDS() throws SQLException {
         DataSourceBuilder<?> dataSourceBuilder = DataSourceBuilder.create();
-        dataSourceBuilder.driverClassName(dataBaseProppertiesConf.getDriver());
-        dataSourceBuilder.url(utilities.dencodeAESString(dataBaseProppertiesConf.getUrl()));
-        dataSourceBuilder.username(utilities.dencodeAESString(dataBaseProppertiesConf.getUser()));
-        dataSourceBuilder.password(utilities.dencodeAESString(utilities.base64Decode(dataBaseProppertiesConf.getPass())));
+        dataSourceBuilder.driverClassName("oracle.jdbc.driver.OracleDriver");
+        dataSourceBuilder.url("jdbc:oracle:thin:@//10.128.248.30:1521/devmicro");
+        dataSourceBuilder.username("SCHBDA");
+        dataSourceBuilder.password("E8aKL4vx6GITk10H");
         return dataSourceBuilder.build();
     }
 
