@@ -6,5 +6,5 @@ import org.apache.kafka.common.protocol.types.Field;
 import java.util.Optional;
 
 public interface ICustomerService {
-    Optional<Customer> getCustomerByBusinessPartner(String businessPartner);
+    Customer getCustomerByBusinessPartner(String businessPartner);
 }

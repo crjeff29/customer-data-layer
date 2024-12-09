@@ -27,15 +27,16 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class DataAccessConfig {
     private final Utilities utilities;
-    private final DataBaseProppertiesConf dataBaseProppertiesConf;
+    private final DataBasePropertiesConf dataBasePropertiesConf;
 
     @Bean
     public DataSource getOracleDS() throws SQLException {
+
         DataSourceBuilder<?> dataSourceBuilder = DataSourceBuilder.create();
-        dataSourceBuilder.driverClassName(dataBaseProppertiesConf.getDriver());
-        dataSourceBuilder.url(utilities.dencodeAESString(dataBaseProppertiesConf.getUrl()));
-        dataSourceBuilder.username(utilities.dencodeAESString(dataBaseProppertiesConf.getUser()));
-        dataSourceBuilder.password(utilities.dencodeAESString(utilities.base64Decode(dataBaseProppertiesConf.getPass())));
+        dataSourceBuilder.driverClassName(dataBasePropertiesConf.getDriver());
+        dataSourceBuilder.url(utilities.dencodeAESString(dataBasePropertiesConf.getUrl()));
+        dataSourceBuilder.username(utilities.dencodeAESString(dataBasePropertiesConf.getUser()));
+        dataSourceBuilder.password(utilities.dencodeAESString(utilities.base64Decode(dataBasePropertiesConf.getPass())));
         return dataSourceBuilder.build();
     }
 

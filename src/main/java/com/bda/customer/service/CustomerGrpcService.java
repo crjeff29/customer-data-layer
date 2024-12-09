@@ -8,8 +8,6 @@ import com.customer.grpc.BusinessPartner;
 import com.customer.grpc.CustomerAccessServiceGrpc;
 import com.customer.grpc.CustomerRequest;
 import com.customer.grpc.CustomerResponse;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +23,6 @@ import java.util.Optional;
 public class CustomerGrpcService extends CustomerAccessServiceGrpc.CustomerAccessServiceImplBase {
 
     private final CustomerService service;
-    private final ObjectMapper objectMapper = new ObjectMapper();
     private final Utilities utilities;
 
     @Override
@@ -47,10 +44,8 @@ public class CustomerGrpcService extends CustomerAccessServiceGrpc.CustomerAcces
     public void getCustomer(BusinessPartner request, StreamObserver<CustomerResponse> responseObserver) {
         String businessPartner = request.getBusinessPartner();
         try {
-
-
-            Optional<Customer> customer = service.getCustomerByBusinessPartner(businessPartner);
-            CustomerDTO dto = utilities.setDTO(customer);
+            Customer customer = service.getCustomerByBusinessPartner(businessPartner);
+            CustomerDTO dto = utilities.setDTO(Optional.ofNullable(customer));
             CustomerResponse response = CustomerResponse.newBuilder()
                     .setId(dto.getId())
                     .setBusinessPartner(dto.getBusinessPartner())
@@ -68,17 +63,12 @@ public class CustomerGrpcService extends CustomerAccessServiceGrpc.CustomerAcces
             responseObserver.onCompleted();
 
         } catch (RuntimeException e) {
-            log.error("Error " + e.getMessage());
+            log.error("Error {}", e.getMessage());
             responseObserver.onError(Status.NOT_FOUND
                     .withDescription(e.getMessage())
                     .asRuntimeException());
-        } catch (Exception e) {
-            log.error("Error " + e.getMessage());
-            responseObserver.onError(Status.INTERNAL
-                    .withDescription("An unexpected error occurred")
-                    .withCause(e)
-                    .asRuntimeException());
         }
+
     }
 
 }

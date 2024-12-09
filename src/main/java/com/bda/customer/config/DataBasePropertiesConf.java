@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConfigurationProperties(prefix = "db.data")
 @Data
-public class DataBaseProppertiesConf {
+public class DataBasePropertiesConf {
     private String url;
     private String user;
     private String pass;
