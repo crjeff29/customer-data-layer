@@ -33,7 +33,7 @@ base:
 
 db:
   data:
-    user: eMXUSIBo8nZyt9nNfK3VroJq/yF/hze9MLdjQ0bvADE=
-    pass: RURXWWxlckplakc4Y3NvUDB6UnF1K2pqMjl1cXRrVURYazVsUlpiTUJhUT0=
+    user: u+CRdXv46fld0C9QpxWYMQ==
+    pass: TmRWMFpuVXJiTlB3eWR0UC9nYXRrZEM1d2c5Z0RKd1A0TVV6dURmaFk3RT0=
     driver: oracle.jdbc.driver.OracleDriver
     url: HQVdhT1YKrYuKe7I6K1MtRfahjIEbE6bq5rL0bY2rD9NjIrahOvBeXq2NeQcuzJm
